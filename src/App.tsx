@@ -4,6 +4,7 @@ import { AudioVisualizer } from './components/AudioVisualizer';
 import { CalibrationSteps } from './components/CalibrationSteps';
 import { MIDIConfig } from './components/MIDIConfig';
 import { HistoryLog } from './components/HistoryLog';
+import logo from './assets/logo.png';
 
 function App() {
   return (
@@ -67,9 +68,11 @@ function App() {
 
         </main>
         
-        {/* Footer */}
-        <footer style={{ textAlign: 'center', padding: '24px 0', color: 'var(--text-muted)', fontSize: '11px', borderTop: '1px solid rgba(255, 255, 255, 0.03)', marginTop: 'auto' }}>
-          VCO Calibration Studio &copy; {new Date().getFullYear()} &bull; AWSM &bull; <a href='https://github.com/awonak/'>https://github.com/awonak</a>
+        <footer style={{ textAlign: 'center', padding: '24px 0', color: 'var(--text-muted)', fontSize: '11px', borderTop: '1px solid rgba(255, 255, 255, 0.03)', marginTop: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+          <div>
+            VCO Calibration Studio &copy; {new Date().getFullYear()} &bull; <a href="https://github.com/awonak/vco-calibration" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 500, transition: 'color 0.2s ease' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--accent-primary)'}>GitHub</a>
+          </div>
+          <img src={logo} alt="AWSM Logo" style={{ height: '32px', width: 'auto', opacity: 0.45, filter: 'invert(1)' }} />
         </footer>
 
       </div>
