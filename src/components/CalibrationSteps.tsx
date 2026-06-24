@@ -1,0 +1,134 @@
+import React from 'react';
+import { useCalibration } from '../context/CalibrationContext';
+
+export const CalibrationSteps: React.FC = () => {
+  const { steps, activeStepIndex, setActiveStepIndex, historyLog } = useCalibration();
+
+  // Helper to find the latest log entry for a specific step index
+  const getLatestLogForStep = (stepIdx: number) => {
+    return historyLog.find((entry) => entry.stepIndex === stepIdx);
+  };
+
+  return (
+    <div className="panel-glass" style={{ padding: '20px' }}>
+      <h4 style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '0.05em', marginBottom: '20px', textTransform: 'uppercase' }}>
+        🔄 5-Octave Iterative Calibration Loop
+      </h4>
+
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        position: 'relative',
+        padding: '0 10px',
+        marginTop: '10px'
+      }}>
+        {/* Progress Background Connecting Line */}
+        <div style={{
+          position: 'absolute',
+          top: '24px',
+          left: '30px',
+          right: '30px',
+          height: '2px',
+          background: 'rgba(255,255,255,0.06)',
+          zIndex: 0
+        }} />
+
+        {steps.map((step, idx) => {
+          const isActive = idx === activeStepIndex;
+          const latestLog = getLatestLogForStep(idx);
+          const hasBeenCalibrated = latestLog !== undefined;
+          
+          let statusBorderColor = 'rgba(255, 255, 255, 0.08)';
+          let dotBg = '#0c0f1d';
+          let textColor = 'var(--text-secondary)';
+          let centsDisplayColor = 'var(--text-muted)';
+          
+          if (isActive) {
+            statusBorderColor = 'var(--accent-primary)';
+            dotBg = 'var(--accent-gradient)';
+            textColor = '#fff';
+          } else if (hasBeenCalibrated) {
+            const absCents = Math.abs(latestLog.deltaCents);
+            const inTolerance = absCents <= 5.0; // Show green if within normal target tolerance
+            statusBorderColor = inTolerance ? 'var(--color-success)' : 'var(--color-warning)';
+            dotBg = inTolerance ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)';
+            textColor = 'var(--text-primary)';
+            centsDisplayColor = inTolerance ? 'var(--color-success)' : 'var(--color-warning)';
+          }
+
+          return (
+            <div
+              key={step.noteName}
+              onClick={() => setActiveStepIndex(idx)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                cursor: 'pointer',
+                zIndex: 1,
+                flex: 1,
+                position: 'relative',
+              }}
+            >
+              {/* Step Circle */}
+              <div
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: dotBg,
+                  border: `2px solid ${statusBorderColor}`,
+                  boxShadow: isActive 
+                    ? '0 0 16px var(--accent-glow)' 
+                    : hasBeenCalibrated 
+                      ? `0 0 12px ${statusBorderColor}44` 
+                      : 'none',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  color: textColor,
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  transform: isActive ? 'scale(1.15)' : 'scale(1)'
+                }}
+              >
+                {step.noteName}
+              </div>
+
+              {/* Target Frequency Label */}
+              <div className="font-mono-data" style={{
+                fontSize: '11px',
+                color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                marginTop: '10px',
+                fontWeight: isActive ? 600 : 400
+              }}>
+                {step.targetHz.toFixed(1)} Hz
+              </div>
+
+              {/* Deviation Cents Display */}
+              <div className="font-mono-data" style={{
+                fontSize: '10px',
+                color: centsDisplayColor,
+                marginTop: '4px',
+                minHeight: '14px',
+                fontWeight: 500
+              }}>
+                {hasBeenCalibrated ? (
+                  <>
+                    {latestLog.deltaCents > 0 ? '+' : ''}
+                    {latestLog.deltaCents.toFixed(1)}¢
+                  </>
+                ) : (
+                  <span style={{ color: 'rgba(255,255,255,0.15)' }}>--</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+export default CalibrationSteps;
