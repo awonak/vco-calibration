@@ -76,3 +76,7 @@ Upload the static assets to Firebase Hosting:
 npx firebase-tools deploy
 ```
 Once completed, the CLI will output your public hosting URL (e.g., `https://vco-calibration.web.app`).
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
