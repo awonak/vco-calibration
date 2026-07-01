@@ -124,7 +124,7 @@ export const LiveTuner: React.FC = () => {
         )}
 
         <div style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 500, letterSpacing: '0.05em', marginBottom: '8px' }}>
-          Detected Fundamental Frequency ($f_0$)
+          Detected Fundamental Frequency (<span style={{ textTransform: 'none' }}>f<sub>0</sub></span>)
         </div>
 
         {/* Massive Digit reading */}
