@@ -13,7 +13,7 @@ export const MIDIConfig: React.FC = () => {
   } = useCalibration();
 
   return (
-    <div className="panel-glass" style={{ padding: '20px' }}>
+    <div id="midi-config-panel" className="panel-glass" style={{ padding: '20px' }}>
       <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
         MIDI Output Interface
       </h3>

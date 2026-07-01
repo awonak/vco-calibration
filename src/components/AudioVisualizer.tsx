@@ -115,7 +115,7 @@ export const AudioVisualizer: React.FC = () => {
   }, [audioActive, analyserNode]);
 
   return (
-    <div className="panel-glass" style={{ padding: '8px', overflow: 'hidden', height: '140px' }}>
+    <div id="waveform-card" className="panel-glass" style={{ padding: '8px', overflow: 'hidden', height: '140px' }}>
       <canvas
         ref={canvasRef}
         style={{

@@ -53,6 +53,10 @@ interface CalibrationContextType {
   historyLog: HistoryEntry[];
   clearHistory: () => void;
   addHistoryEntry: (measuredHz: number, method?: 'auto' | 'manual') => void;
+
+  // Onboarding Guided Tour
+  activeTourStep: number | null;
+  setActiveTourStep: (step: number | null) => void;
 }
 
 const CalibrationContext = createContext<CalibrationContextType | undefined>(undefined);
@@ -87,6 +91,9 @@ export const CalibrationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // 5. History State
   const [historyLog, setHistoryLog] = useState<HistoryEntry[]>([]);
+
+  // 6. Onboarding Help Tour State
+  const [activeTourStep, setActiveTourStep] = useState<number | null>(null);
 
   // Refs for high performance Web Audio rendering loop
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -504,6 +511,8 @@ export const CalibrationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         historyLog,
         clearHistory,
         addHistoryEntry,
+        activeTourStep,
+        setActiveTourStep,
       }}
     >
       {children}

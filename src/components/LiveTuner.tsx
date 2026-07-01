@@ -58,7 +58,7 @@ export const LiveTuner: React.FC = () => {
     : '--¢';
 
   return (
-    <div className="panel-glass" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div id="tuner-panel" className="panel-glass" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
       
       {/* Top Header: Target vs Audio Input Button */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -71,37 +71,45 @@ export const LiveTuner: React.FC = () => {
           </h2>
         </div>
 
-        <div>
-          {!audioActive ? (
-            <button className="btn-primary" onClick={startAudio}>
-              🎙️ Start Tuner Input
-            </button>
-          ) : (
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <button
-                className="btn-secondary"
-                onClick={() => setMonitorActive(!monitorActive)}
-                style={{
-                  borderColor: monitorActive ? 'var(--accent-primary)' : 'rgba(255, 255, 255, 0.1)',
-                  color: monitorActive ? '#fff' : 'var(--text-secondary)',
-                  background: monitorActive ? 'rgba(139, 92, 246, 0.15)' : 'rgba(255, 255, 255, 0.06)',
-                  boxShadow: monitorActive ? '0 0 10px rgba(139, 92, 246, 0.2)' : 'none',
-                  fontSize: '14px',
-                  padding: '10px 14px',
-                }}
-              >
-                {monitorActive ? '🔊 Preview ON' : '🔈 Preview OFF'}
-              </button>
-              <button className="btn-secondary" onClick={stopAudio} style={{ color: '#fca5a5', padding: '10px 14px' }}>
-                ⏹️ Stop Audio
-              </button>
-            </div>
-          )}
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button 
+            id="tuner-start-btn" 
+            className="btn-primary" 
+            onClick={audioActive ? stopAudio : startAudio}
+            style={{
+              background: audioActive ? 'rgba(239, 68, 68, 0.15)' : undefined,
+              borderColor: audioActive ? 'rgba(239, 68, 68, 0.3)' : undefined,
+              color: audioActive ? '#fca5a5' : undefined,
+              fontSize: '14px',
+              padding: '10px 14px'
+            }}
+          >
+            {audioActive ? '⏹️ Stop Audio' : '🎙️ Start Tuner Input'}
+          </button>
+          
+          <button
+            id="tuner-preview-btn"
+            className="btn-secondary"
+            onClick={() => setMonitorActive(!monitorActive)}
+            disabled={!audioActive}
+            style={{
+              borderColor: monitorActive && audioActive ? 'var(--accent-primary)' : 'rgba(255, 255, 255, 0.1)',
+              color: !audioActive ? 'var(--text-muted)' : (monitorActive ? '#fff' : 'var(--text-secondary)'),
+              background: monitorActive && audioActive ? 'rgba(139, 92, 246, 0.15)' : 'rgba(255, 255, 255, 0.06)',
+              boxShadow: monitorActive && audioActive ? '0 0 10px rgba(139, 92, 246, 0.2)' : 'none',
+              fontSize: '14px',
+              padding: '10px 14px',
+              opacity: !audioActive ? 0.5 : 1,
+              cursor: !audioActive ? 'not-allowed' : 'pointer'
+            }}
+          >
+            {monitorActive && audioActive ? '🔊 Preview ON' : '🔈 Preview OFF'}
+          </button>
         </div>
       </div>
 
       {/* Main Large Pitch Deviation Display Card */}
-      <div className={`panel-glass ${tunerThemeClass}`} style={{
+      <div id="pitch-reading-card" className={`panel-glass ${tunerThemeClass}`} style={{
         background: 'rgba(5, 7, 14, 0.5)',
         padding: '30px 20px',
         textAlign: 'center',
@@ -282,56 +290,69 @@ export const LiveTuner: React.FC = () => {
         </div>
       </div>
 
-      {/* Manual Workflow Controls (Prev / Next manual overrides) */}
-      <div style={{ display: 'flex', gap: '16px' }}>
-        <button className="btn-secondary" onClick={goToPrevStep} style={{ flex: 1 }}>
-          ⏮️ Previous Step
-        </button>
-        <button
-          className="btn-primary"
-          onClick={() => goToNextStep('manual')}
-          style={{ flex: 1 }}
-        >
-          Next Step ⏭️
-        </button>
-      </div>
-
-      <hr style={{ border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }} />
-
-      {/* Calibration settings options */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <div>
-          <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500, textTransform: 'uppercase' }}>
-            Lock Tolerance (Cents)
-          </label>
-          <select
-            className="form-select"
-            value={toleranceCents}
-            onChange={(e) => setToleranceCents(parseFloat(e.target.value))}
+      {/* Settings & Manual Controls Group Wrapper */}
+      <div 
+        id="tuner-settings-card" 
+        style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '20px',
+          padding: '12px',
+          margin: '-12px',
+          borderRadius: '12px'
+        }}
+      >
+        {/* Manual Workflow Controls (Prev / Next manual overrides) */}
+        <div style={{ display: 'flex', gap: '16px' }}>
+          <button className="btn-secondary" onClick={goToPrevStep} style={{ flex: 1 }}>
+            ⏮️ Previous Step
+          </button>
+          <button
+            className="btn-primary"
+            onClick={() => goToNextStep('manual')}
+            style={{ flex: 1 }}
           >
-            <option value="1">± 1.0 Cent (Extremely Strict)</option>
-            <option value="2">± 2.0 Cents (Strict - Default)</option>
-            <option value="5">± 5.0 Cents (Normal)</option>
-            <option value="10">± 10.0 Cents (Loose)</option>
-          </select>
+            Next Step ⏭️
+          </button>
         </div>
 
-        <div>
-          <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500, textTransform: 'uppercase' }}>
-            Auto-Advance Lock Hold
-          </label>
-          <select
-            className="form-select"
-            value={autoAdvanceSecs}
-            onChange={(e) => setAutoAdvanceSecs(parseFloat(e.target.value))}
-          >
-            <option value="1">1.0 Seconds</option>
-            <option value="1.5">1.5 Seconds</option>
-            <option value="2">2.0 Seconds</option>
-            <option value="3">3.0 Seconds</option>
-            <option value="5">5.0 Seconds (Default)</option>
-            <option value="0">Disabled (Manual Only)</option>
-          </select>
+        <hr style={{ border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', margin: '0' }} />
+
+        {/* Calibration settings options */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500, textTransform: 'uppercase' }}>
+              Lock Tolerance (Cents)
+            </label>
+            <select
+              className="form-select"
+              value={toleranceCents}
+              onChange={(e) => setToleranceCents(parseFloat(e.target.value))}
+            >
+              <option value="1">± 1.0 Cent (Extremely Strict)</option>
+              <option value="2">± 2.0 Cents (Strict - Default)</option>
+              <option value="5">± 5.0 Cents (Normal)</option>
+              <option value="10">± 10.0 Cents (Loose)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500, textTransform: 'uppercase' }}>
+              Auto-Advance Lock Hold
+            </label>
+            <select
+              className="form-select"
+              value={autoAdvanceSecs}
+              onChange={(e) => setAutoAdvanceSecs(parseFloat(e.target.value))}
+            >
+              <option value="1">1.0 Seconds</option>
+              <option value="1.5">1.5 Seconds</option>
+              <option value="2">2.0 Seconds</option>
+              <option value="3">3.0 Seconds</option>
+              <option value="5">5.0 Seconds (Default)</option>
+              <option value="0">Disabled (Manual Only)</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>

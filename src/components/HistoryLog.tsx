@@ -6,7 +6,7 @@ export const HistoryLog: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   return (
-    <div className="panel-glass" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div id="history-log-panel" className="panel-glass" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h3
           onClick={() => setIsCollapsed(!isCollapsed)}
