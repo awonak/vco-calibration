@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { CalibrationProvider, useCalibration } from './context/CalibrationContext';
 import { LiveTuner } from './components/LiveTuner';
 import { AudioVisualizer } from './components/AudioVisualizer';
@@ -9,6 +10,12 @@ import logo from './assets/logo.png';
 
 function StudioLayout() {
   const { setActiveTourStep } = useCalibration();
+  const [guideCollapsed, setGuideCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth <= 768;
+    }
+    return false;
+  });
 
   return (
     <div className="app-container">
@@ -26,6 +33,7 @@ function StudioLayout() {
         </div>
         
         <button 
+          id="help-tour-btn"
           className="btn-secondary" 
           onClick={() => setActiveTourStep(0)} 
           style={{
@@ -47,34 +55,57 @@ function StudioLayout() {
       <main className="app-grid">
         
         {/* Left Column: Tuner, Waveform, Steps */}
-        <section style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <section className="desktop-left-col">
           <LiveTuner />
           <AudioVisualizer />
           <CalibrationSteps />
         </section>
 
         {/* Right Column: MIDI Configuration, History Log, Manual Guide */}
-        <section style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <section className="desktop-right-col">
           <MIDIConfig />
           
           <HistoryLog />
 
           {/* Analog Calibration Guidance panel */}
-          <div className="panel-glass" style={{ padding: '20px', fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
-            <h4 style={{ color: 'var(--text-primary)', marginBottom: '8px', fontSize: '14px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
-              Calibration Guide
+          <div id="calibration-guide-panel" className="panel-glass" style={{ padding: '20px', fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
+            <h4 
+              onClick={() => setGuideCollapsed(!guideCollapsed)}
+              style={{ 
+                color: 'var(--text-primary)', 
+                marginBottom: guideCollapsed ? '0' : '8px', 
+                fontSize: '14px', 
+                fontWeight: 600, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                userSelect: 'none'
+              }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                📘 Calibration Guide
+              </span>
+              <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+                {guideCollapsed ? '▼ Show' : '▲ Hide'}
+              </span>
             </h4>
-            <p style={{ marginBottom: '10px' }}>
-              Analog VCOs drift due to temperature changes and component aging. To calibrate:
-            </p>
-            <ol style={{ paddingLeft: '16px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <li>Connect your MIDI interface output to the pitch input of your physical VCO.</li>
-              <li>Feed the VCO audio output back into your computer's audio input.</li>
-              <li>Select the MIDI port above and trigger <strong>Enable MIDI Output</strong>.</li>
-              <li>Start at <strong>C1</strong>, adjust your hardware VCO coarse/fine pitch pots to zero out deviation.</li>
-              <li>Advance up the octaves (C2-C5), adjusting the VCO's volt-per-octave tracking trim pots.</li>
-              <li>Loop back to check for drift and iterate until all 5 octaves lock within tolerance!</li>
-            </ol>
+            
+            {!guideCollapsed && (
+              <>
+                <p style={{ marginBottom: '10px' }}>
+                  Analog VCOs drift due to temperature changes and component aging. To calibrate:
+                </p>
+                <ol style={{ paddingLeft: '16px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <li>Connect your MIDI interface output to the pitch input of your physical VCO.</li>
+                  <li>Feed the VCO audio output back into your computer's audio input.</li>
+                  <li>Select the MIDI port above and trigger <strong>Enable MIDI Output</strong>.</li>
+                  <li>Start at <strong>C1</strong>, adjust your hardware VCO coarse/fine pitch pots to zero out deviation.</li>
+                  <li>Advance up the octaves (C2-C5), adjusting the VCO's volt-per-octave tracking trim pots.</li>
+                  <li>Loop back to check for drift and iterate until all 5 octaves lock within tolerance!</li>
+                </ol>
+              </>
+            )}
           </div>
         </section>
 

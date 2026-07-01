@@ -3,7 +3,12 @@ import { useCalibration } from '../context/CalibrationContext';
 
 export const HistoryLog: React.FC = () => {
   const { historyLog, clearHistory } = useCalibration();
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth <= 768;
+    }
+    return false;
+  });
 
   return (
     <div id="history-log-panel" className="panel-glass" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
