@@ -4,6 +4,8 @@ import { useCalibration } from '../context/CalibrationContext';
 export const MIDIConfig: React.FC = () => {
   const {
     midiSupported,
+    midiInitialized,
+    initializeMidi,
     midiOutputs,
     selectedMidiId,
     setSelectedMidiId,
@@ -29,6 +31,25 @@ export const MIDIConfig: React.FC = () => {
           lineHeight: '1.5'
         }}>
           <strong>MIDI Support Blocked or Unavailable:</strong> Make sure your browser supports the Web MIDI API and you have granted MIDI permissions.
+        </div>
+      ) : !midiInitialized ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+            To transmit reference notes to your VCO, enable the Web MIDI interface. This will request MIDI device access permissions.
+          </div>
+          
+          <button
+            id="midi-init-btn"
+            className="btn-primary"
+            style={{
+              width: '100%',
+              background: 'var(--accent-gradient)',
+              boxShadow: '0 4px 12px var(--accent-glow)'
+            }}
+            onClick={initializeMidi}
+          >
+            🔌 Enable MIDI Output
+          </button>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -66,7 +87,7 @@ export const MIDIConfig: React.FC = () => {
               onClick={() => setMidiActive(!midiActive)}
               disabled={midiOutputs.length === 0}
             >
-              {midiActive ? '🟢 MIDI Output Active' : '▶️ Enable MIDI Output'}
+              {midiActive ? '🟢 MIDI Output Active' : '▶️ Start MIDI Output'}
             </button>
             
             <button

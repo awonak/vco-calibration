@@ -32,6 +32,8 @@ interface CalibrationContextType {
 
   // MIDI Connection
   midiSupported: boolean;
+  midiInitialized: boolean;
+  initializeMidi: () => Promise<boolean>;
   midiOutputs: WebMIDIOutput[];
   selectedMidiId: string;
   setSelectedMidiId: (id: string) => void;
@@ -70,7 +72,10 @@ export const CalibrationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [autoAdvanceSecs, setAutoAdvanceSecs] = useState<number>(5.0);
 
   // 3. MIDI State
-  const [midiSupported, setMidiSupported] = useState<boolean>(false);
+  const [midiSupported, setMidiSupported] = useState<boolean>(
+    typeof navigator !== 'undefined' && !!navigator.requestMIDIAccess
+  );
+  const [midiInitialized, setMidiInitialized] = useState<boolean>(false);
   const [midiOutputs, setMidiOutputs] = useState<WebMIDIOutput[]>([]);
   const [selectedMidiId, setSelectedMidiId] = useState<string>('');
   const [midiActive, setMidiActive] = useState<boolean>(false);
@@ -104,6 +109,7 @@ export const CalibrationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Shared ref for the selected output to avoid dependency cycles in requestAnimationFrame
   const selectedMidiOutputRef = useRef<WebMIDIOutput | null>(null);
+  const midiAccessRef = useRef<WebMIDIAccess | null>(null);
 
   // Keep a ref of monitor active state to read inside callback without staleness
   const monitorActiveRef = useRef<boolean>(monitorActive);
@@ -150,40 +156,50 @@ export const CalibrationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     activeStepIndexRef.current = activeStepIndex;
   }, [activeStepIndex]);
 
-  // Initialize MIDI Device access
-  useEffect(() => {
-    let midiAccessObj: WebMIDIAccess | null = null;
+  // Initialize MIDI Device access callback triggered on user action
+  const initializeMidi = useCallback(async (): Promise<boolean> => {
+    if (midiAccessRef.current) return true;
 
-    async function initMidi() {
-      const access = await requestMIDIAccessSafe();
-      if (access) {
-        setMidiSupported(true);
-        midiAccessObj = access;
+    const access = await requestMIDIAccessSafe();
+    if (access) {
+      setMidiSupported(true);
+      setMidiInitialized(true);
+      midiAccessRef.current = access;
 
-        const updateOutputs = () => {
-          const list = Array.from(access.outputs.values());
-          setMidiOutputs(list);
-          if (list.length > 0 && !selectedMidiId) {
-            // Default to first output
-            setSelectedMidiId(list[0].id);
+      const updateOutputs = () => {
+        const list = Array.from(access.outputs.values());
+        setMidiOutputs(list);
+        setSelectedMidiId((currentId) => {
+          if (list.length > 0 && !currentId) {
+            return list[0].id;
           }
-        };
+          return currentId;
+        });
+      };
 
-        updateOutputs();
-        access.onstatechange = updateOutputs;
-      } else {
-        setMidiSupported(false);
+      updateOutputs();
+      access.onstatechange = updateOutputs;
+
+      const list = Array.from(access.outputs.values());
+      if (list.length > 0) {
+        setMidiActive(true);
       }
+      return true;
+    } else {
+      setMidiSupported(false);
+      setMidiInitialized(false);
+      return false;
     }
+  }, []);
 
-    initMidi();
-
+  // Clean up MIDI state-change subscription on unmount
+  useEffect(() => {
     return () => {
-      if (midiAccessObj) {
-        midiAccessObj.onstatechange = undefined;
+      if (midiAccessRef.current) {
+        midiAccessRef.current.onstatechange = undefined;
       }
     };
-  }, [selectedMidiId]);
+  }, []);
 
   // Keep track of the active MIDI output object in a Ref
   useEffect(() => {
@@ -494,6 +510,8 @@ export const CalibrationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         autoAdvanceSecs,
         setAutoAdvanceSecs,
         midiSupported,
+        midiInitialized,
+        initializeMidi,
         midiOutputs,
         selectedMidiId,
         setSelectedMidiId,
