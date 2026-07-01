@@ -69,12 +69,12 @@ function StudioLayout() {
 
           {/* Analog Calibration Guidance panel */}
           <div id="calibration-guide-panel" className="panel-glass" style={{ padding: '20px', fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
-            <h4
+            <h3
               onClick={() => setGuideCollapsed(!guideCollapsed)}
               style={{
                 color: 'var(--text-primary)',
                 marginBottom: guideCollapsed ? '0' : '8px',
-                fontSize: '14px',
+                fontSize: '18px',
                 fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
@@ -86,10 +86,10 @@ function StudioLayout() {
               <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 Calibration Guide
               </span>
-              <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500 }}>
                 {guideCollapsed ? '▼ Show' : '▲ Hide'}
               </span>
-            </h4>
+            </h3>
 
             {!guideCollapsed && (
               <>

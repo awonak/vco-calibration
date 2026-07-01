@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useCalibration } from '../context/CalibrationContext';
 
 export const LiveTuner: React.FC = () => {
@@ -18,13 +17,6 @@ export const LiveTuner: React.FC = () => {
     monitorActive,
     setMonitorActive,
   } = useCalibration();
-
-  const [showSettings, setShowSettings] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth > 768;
-    }
-    return true;
-  });
 
   const currentStep = steps[activeStepIndex];
   const hasDetectedPitch = tunerData.frequency > 0;
@@ -323,64 +315,44 @@ export const LiveTuner: React.FC = () => {
           </button>
         </div>
 
-        <button
-          className="btn-secondary"
-          onClick={() => setShowSettings(!showSettings)}
-          style={{
-            fontSize: '12px',
-            padding: '8px 16px',
-            alignSelf: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            cursor: 'pointer'
-          }}
-        >
-          {showSettings ? '⚙️ Hide Settings' : '⚙️ Show Settings'}
-        </button>
+        <hr style={{ border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', margin: '0' }} />
 
-        {showSettings && (
-          <>
-            <hr style={{ border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', margin: '0' }} />
+        {/* Calibration settings options */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500, textTransform: 'uppercase' }}>
+              Lock Tolerance (Cents)
+            </label>
+            <select
+              className="form-select"
+              value={toleranceCents}
+              onChange={(e) => setToleranceCents(parseFloat(e.target.value))}
+            >
+              <option value="1">± 1.0 Cent (Extremely Strict)</option>
+              <option value="2">± 2.0 Cents (Strict - Default)</option>
+              <option value="5">± 5.0 Cents (Normal)</option>
+              <option value="10">± 10.0 Cents (Loose)</option>
+            </select>
+          </div>
 
-            {/* Calibration settings options */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500, textTransform: 'uppercase' }}>
-                  Lock Tolerance (Cents)
-                </label>
-                <select
-                  className="form-select"
-                  value={toleranceCents}
-                  onChange={(e) => setToleranceCents(parseFloat(e.target.value))}
-                >
-                  <option value="1">± 1.0 Cent (Extremely Strict)</option>
-                  <option value="2">± 2.0 Cents (Strict - Default)</option>
-                  <option value="5">± 5.0 Cents (Normal)</option>
-                  <option value="10">± 10.0 Cents (Loose)</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500, textTransform: 'uppercase' }}>
-                  Auto-Advance Lock Hold
-                </label>
-                <select
-                  className="form-select"
-                  value={autoAdvanceSecs}
-                  onChange={(e) => setAutoAdvanceSecs(parseFloat(e.target.value))}
-                >
-                  <option value="1">1.0 Seconds</option>
-                  <option value="1.5">1.5 Seconds</option>
-                  <option value="2">2.0 Seconds</option>
-                  <option value="3">3.0 Seconds</option>
-                  <option value="5">5.0 Seconds (Default)</option>
-                  <option value="0">Disabled (Manual Only)</option>
-                </select>
-              </div>
-            </div>
-          </>
-        )}
+          <div>
+            <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500, textTransform: 'uppercase' }}>
+              Auto-Advance Lock Hold
+            </label>
+            <select
+              className="form-select"
+              value={autoAdvanceSecs}
+              onChange={(e) => setAutoAdvanceSecs(parseFloat(e.target.value))}
+            >
+              <option value="1">1.0 Seconds</option>
+              <option value="1.5">1.5 Seconds</option>
+              <option value="2">2.0 Seconds</option>
+              <option value="3">3.0 Seconds</option>
+              <option value="5">5.0 Seconds (Default)</option>
+              <option value="0">Disabled (Manual Only)</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
   );

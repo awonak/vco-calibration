@@ -487,11 +487,6 @@ body {
   }
 
   #calibration-steps-timeline, #waveform-card {
-    margin-left: -12px;
-    margin-right: -12px;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
     align-self: stretch;
   }
 }

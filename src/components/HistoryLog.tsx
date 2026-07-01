@@ -21,12 +21,13 @@ export const HistoryLog: React.FC = () => {
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
+            justifyContent: 'space-between',
+            flex: 1,
             userSelect: 'none'
           }}
         >
-          Session History Log {historyLog.length > 0 && `(${historyLog.length})`}
-          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+          <span>Session History Log {historyLog.length > 0 && `(${historyLog.length})`}</span>
+          <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500, marginRight: historyLog.length > 0 && !isCollapsed ? '16px' : '0px' }}>
             {isCollapsed ? '▼ Show' : '▲ Hide'}
           </span>
         </h3>
