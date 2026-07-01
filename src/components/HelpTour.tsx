@@ -106,7 +106,7 @@ const TOUR_STEPS: TourStep[] = [
   },
   {
     targetId: "calibration-steps-timeline",
-    title: "🔄 7. Octave Register Timeline",
+    title: "🔄 7. Octave Calibration Steps",
     content: "Tracks progress from C1 through C5. Displays the active octave note and the saved cents tracking offset for each calibrated step.",
     placement: 'top'
   },
