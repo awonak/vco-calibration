@@ -499,6 +499,12 @@ body {
   gap: 16px;
 }
 
+.tuner-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .tuner-target-note {
   font-size: 32px;
   font-weight: 800;
@@ -543,10 +549,15 @@ body {
 
 @media (max-width: 768px) {
   .tuner-header {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: column-reverse;
+    align-items: center;
     text-align: center;
     gap: 12px;
+  }
+
+  .tuner-buttons {
+    justify-content: center;
+    width: 100%;
   }
   
   .tuner-target-note {

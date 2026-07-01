@@ -71,7 +71,7 @@ export const LiveTuner: React.FC = () => {
           </h2>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <div className="tuner-buttons">
           <button 
             id="tuner-start-btn" 
             className="btn-primary" 
