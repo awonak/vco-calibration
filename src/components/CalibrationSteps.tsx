@@ -12,7 +12,7 @@ export const CalibrationSteps: React.FC = () => {
   return (
     <div className="panel-glass" style={{ padding: '20px' }}>
       <h4 style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '0.05em', marginBottom: '20px', textTransform: 'uppercase' }}>
-        🔄 5-Octave Iterative Calibration Loop
+        5-Octave Iterative Calibration Loop
       </h4>
 
       <div style={{

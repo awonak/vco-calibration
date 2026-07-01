@@ -13,9 +13,9 @@ export const MIDIConfig: React.FC = () => {
   } = useCalibration();
 
   return (
-    <div className="panel-glass panel-glow-purple" style={{ padding: '20px' }}>
+    <div className="panel-glass" style={{ padding: '20px' }}>
       <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ color: 'var(--accent-primary)' }}>🔌</span> MIDI Output Interface
+        MIDI Output Interface
       </h3>
 
       {!midiSupported ? (

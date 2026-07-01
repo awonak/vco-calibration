@@ -20,7 +20,7 @@ export const HistoryLog: React.FC = () => {
             userSelect: 'none'
           }}
         >
-          <span>📊</span> Session History Log {historyLog.length > 0 && `(${historyLog.length})`}
+          Session History Log {historyLog.length > 0 && `(${historyLog.length})`}
           <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
             {isCollapsed ? '▼ Show' : '▲ Hide'}
           </span>

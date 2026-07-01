@@ -14,21 +14,14 @@ function App() {
         {/* Header */}
         <header className="panel-glass app-header">
           <div className="app-title-container">
-            <span className="logo-glow">🎛️</span>
             <div>
-              <h1 className="app-title">VCO Calibration Studio</h1>
+              <h1 className="app-title">Analog VCO Calibration Studio</h1>
               <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px', fontWeight: 500 }}>
                 ANALOG VOLTAGE-CONTROLLED OSCILLATOR CALIBRATOR
               </p>
             </div>
           </div>
           
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-secondary)' }}>
-              <span className="glow-animation" style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-primary)', display: 'inline-block' }}></span>
-              Precision Mode
-            </div>
-          </div>
         </header>
 
         {/* Core Layout Grid */}
@@ -50,7 +43,7 @@ function App() {
             {/* Analog Calibration Guidance panel */}
             <div className="panel-glass" style={{ padding: '20px', fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
               <h4 style={{ color: 'var(--text-primary)', marginBottom: '8px', fontSize: '14px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                💡 Calibration Guide
+                Calibration Guide
               </h4>
               <p style={{ marginBottom: '10px' }}>
                 Analog VCOs drift due to temperature changes and component aging. To calibrate:
