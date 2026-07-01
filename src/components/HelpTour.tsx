@@ -31,10 +31,13 @@ const TOUR_STEPS: TourStep[] = [
     content: (
       <>
         <div style={{ marginBottom: '10px' }}>
-          Select your hardware MIDI interface port and click 'Enable MIDI Output'. This will transmit continuous reference gate and pitch notes to control your physical synthesizer's voice.
+          Click 'Enable MIDI Output' and grant Web MIDI permissions. This will initialize the interface, discover your hardware ports, and allow you to transmit reference gate and pitch notes to control your physical synthesizer's voice.
+        </div>
+        <div style={{ marginBottom: '10px' }}>
+          You can use any USB MIDI interface eurorack module like <a href="https://intellijel.com/shop/eurorack/umidi/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 600 }}>Intellijel µMIDI</a> or a USB MIDI keyboard with CV pitch output like the <a href="https://www.arturia.com/products/hybrid-synths/keystep-mk2/keystep-32-mk2" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 600 }}>Arturia Keystep</a>.
         </div>
         <div>
-          You can use any USB MIDI interface eurorack module like <a href="https://intellijel.com/shop/eurorack/umidi/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 600 }}>Intellijel µMIDI</a> or a USB MIDI keyboard with CV pitch output like the <a href="https://www.arturia.com/products/hybrid-synths/keystep-mk2/keystep-32-mk2" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 600 }}>Arturia Keystep</a>.
+          💡 <strong>Note:</strong> Using the MIDI output is optional and is only used to auto-advance the reference note. You can still manually change the reference note with the Previous / Next Step buttons.
         </div>
       </>
     ),
@@ -154,8 +157,17 @@ export const HelpTour: React.FC = () => {
         targetEl.classList.add('tour-highlighted');
         parentEl = (targetEl.parentElement?.closest('.panel-glass') || targetEl) as HTMLElement;
         parentEl.classList.add('tour-parent-elevated');
-        // Scroll the element into view smoothly if needed
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Scroll the element into view dynamically based on placement to prevent tooltip cutoff
+        const placement = currentStep.placement;
+        let scrollBlock: ScrollIntoViewOptions['block'] = 'center';
+        if (placement === 'top') {
+          scrollBlock = 'end';
+        } else if (placement === 'bottom') {
+          scrollBlock = 'start';
+        }
+        
+        targetEl.scrollIntoView({ behavior: 'smooth', block: scrollBlock });
       }
     }
 
@@ -287,7 +299,7 @@ export const HelpTour: React.FC = () => {
             </button>
           )}
           {isFirst && <div style={{ flex: 1 }} />}
-          
+
           <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
             {!isFirst && (
               <button className="btn-tour-nav" onClick={handleBack}>
