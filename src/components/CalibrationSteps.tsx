@@ -24,15 +24,7 @@ export const CalibrationSteps: React.FC = () => {
         marginTop: '10px'
       }}>
         {/* Progress Background Connecting Line */}
-        <div style={{
-          position: 'absolute',
-          top: '24px',
-          left: '30px',
-          right: '30px',
-          height: '2px',
-          background: 'rgba(255,255,255,0.06)',
-          zIndex: 0
-        }} />
+        <div className="step-connecting-line" />
 
         {steps.map((step, idx) => {
           const isActive = idx === activeStepIndex;
@@ -73,13 +65,8 @@ export const CalibrationSteps: React.FC = () => {
             >
               {/* Step Circle */}
               <div
+                className="step-circle"
                 style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   background: dotBg,
                   border: `2px solid ${statusBorderColor}`,
                   boxShadow: isActive 
@@ -87,10 +74,7 @@ export const CalibrationSteps: React.FC = () => {
                     : hasBeenCalibrated 
                       ? `0 0 12px ${statusBorderColor}44` 
                       : 'none',
-                  fontSize: '16px',
-                  fontWeight: 700,
                   color: textColor,
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   transform: isActive ? 'scale(1.15)' : 'scale(1)'
                 }}
               >
@@ -98,20 +82,16 @@ export const CalibrationSteps: React.FC = () => {
               </div>
 
               {/* Target Frequency Label */}
-              <div className="font-mono-data" style={{
-                fontSize: '11px',
+              <div className="font-mono-data step-hz-label" style={{
                 color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                marginTop: '10px',
                 fontWeight: isActive ? 600 : 400
               }}>
                 {step.targetHz.toFixed(1)} Hz
               </div>
 
               {/* Deviation Cents Display */}
-              <div className="font-mono-data" style={{
-                fontSize: '10px',
+              <div className="font-mono-data step-cents-label" style={{
                 color: centsDisplayColor,
-                marginTop: '4px',
                 minHeight: '14px',
                 fontWeight: 500
               }}>

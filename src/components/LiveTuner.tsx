@@ -61,17 +61,17 @@ export const LiveTuner: React.FC = () => {
     <div id="tuner-panel" className="panel-glass" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
       
       {/* Top Header: Target vs Audio Input Button */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="tuner-header">
         <div>
           <span style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.05em' }}>
             Target Pitch
           </span>
-          <h2 style={{ fontSize: '32px', fontWeight: 800, marginTop: '2px' }}>
+          <h2 className="tuner-target-note">
             {currentStep.noteName} <span style={{ fontSize: '18px', fontWeight: 400, color: 'var(--text-secondary)' }}>({currentStep.targetHz.toFixed(3)} Hz)</span>
           </h2>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <div className="tuner-buttons">
           <button 
             id="tuner-start-btn" 
             className="btn-primary" 
@@ -136,8 +136,7 @@ export const LiveTuner: React.FC = () => {
         </div>
 
         {/* Massive Digit reading */}
-        <div className="font-mono-data" style={{
-          fontSize: '64px',
+        <div className="font-mono-data tuner-digits" style={{
           fontWeight: 700,
           color: isWithinTolerance ? 'var(--color-success)' : hasDetectedPitch ? 'var(--color-warning)' : 'var(--text-muted)',
           textShadow: isWithinTolerance 

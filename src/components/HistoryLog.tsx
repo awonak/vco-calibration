@@ -3,7 +3,12 @@ import { useCalibration } from '../context/CalibrationContext';
 
 export const HistoryLog: React.FC = () => {
   const { historyLog, clearHistory } = useCalibration();
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth <= 768;
+    }
+    return false;
+  });
 
   return (
     <div id="history-log-panel" className="panel-glass" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -16,12 +21,13 @@ export const HistoryLog: React.FC = () => {
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
+            justifyContent: 'space-between',
+            flex: 1,
             userSelect: 'none'
           }}
         >
-          Session History Log {historyLog.length > 0 && `(${historyLog.length})`}
-          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+          <span>Session History Log {historyLog.length > 0 && `(${historyLog.length})`}</span>
+          <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500, marginRight: historyLog.length > 0 && !isCollapsed ? '16px' : '0px' }}>
             {isCollapsed ? '▼ Show' : '▲ Hide'}
           </span>
         </h3>
