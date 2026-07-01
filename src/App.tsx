@@ -20,7 +20,7 @@ function StudioLayout() {
   return (
     <div className="app-container">
       <HelpTour />
-      
+
       {/* Header */}
       <header className="panel-glass app-header">
         <div className="app-title-container">
@@ -31,11 +31,11 @@ function StudioLayout() {
             </p>
           </div>
         </div>
-        
-        <button 
+
+        <button
           id="help-tour-btn"
-          className="btn-secondary" 
-          onClick={() => setActiveTourStep(0)} 
+          className="btn-secondary"
+          onClick={() => setActiveTourStep(0)}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -53,7 +53,7 @@ function StudioLayout() {
 
       {/* Core Layout Grid */}
       <main className="app-grid">
-        
+
         {/* Left Column: Tuner, Waveform, Steps */}
         <section className="desktop-left-col">
           <LiveTuner />
@@ -64,33 +64,33 @@ function StudioLayout() {
         {/* Right Column: MIDI Configuration, History Log, Manual Guide */}
         <section className="desktop-right-col">
           <MIDIConfig />
-          
+
           <HistoryLog />
 
           {/* Analog Calibration Guidance panel */}
           <div id="calibration-guide-panel" className="panel-glass" style={{ padding: '20px', fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
-            <h4 
+            <h4
               onClick={() => setGuideCollapsed(!guideCollapsed)}
-              style={{ 
-                color: 'var(--text-primary)', 
-                marginBottom: guideCollapsed ? '0' : '8px', 
-                fontSize: '14px', 
-                fontWeight: 600, 
-                display: 'flex', 
-                alignItems: 'center', 
+              style={{
+                color: 'var(--text-primary)',
+                marginBottom: guideCollapsed ? '0' : '8px',
+                fontSize: '14px',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
                 justifyContent: 'space-between',
                 cursor: 'pointer',
                 userSelect: 'none'
               }}
             >
               <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                📘 Calibration Guide
+                Calibration Guide
               </span>
               <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                 {guideCollapsed ? '▼ Show' : '▲ Hide'}
               </span>
             </h4>
-            
+
             {!guideCollapsed && (
               <>
                 <p style={{ marginBottom: '10px' }}>
@@ -110,7 +110,7 @@ function StudioLayout() {
         </section>
 
       </main>
-      
+
       <footer style={{ textAlign: 'center', padding: '24px 0', color: 'var(--text-muted)', fontSize: '11px', borderTop: '1px solid rgba(255, 255, 255, 0.03)', marginTop: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
         <div>
           VCO Calibration Studio &copy; {new Date().getFullYear()} &bull; <a href="https://github.com/awonak/vco-calibration" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 500, transition: 'color 0.2s ease' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--accent-primary)'}>GitHub</a>
