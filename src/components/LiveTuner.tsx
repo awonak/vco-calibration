@@ -40,7 +40,7 @@ export const LiveTuner: React.FC = () => {
       statusMessage = tunerData.deltaCents > 0
         ? '⚠️ High - Adjust VCO pitch lower'
         : '⚠️ Low - Adjust VCO pitch higher';
-      tunerThemeClass = 'panel-glow-amber';
+      tunerThemeClass = 'panel-glow-danger';
     }
   }
 
@@ -58,50 +58,33 @@ export const LiveTuner: React.FC = () => {
     : '--¢';
 
   return (
-    <div id="tuner-panel" className="panel-glass" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div id="tuner-panel" className="panel p-6 flex flex-col gap-5">
       
       {/* Top Header: Target vs Audio Input Button */}
       <div className="tuner-header">
         <div>
-          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.05em' }}>
+          <span className="text-[11px] text-secondary uppercase font-semibold tracking-wider">
             Target Pitch
           </span>
           <h2 className="tuner-target-note">
-            {currentStep.noteName} <span style={{ fontSize: '18px', fontWeight: 400, color: 'var(--text-secondary)' }}>({currentStep.targetHz.toFixed(3)} Hz)</span>
+            {currentStep.noteName} <span className="text-lg font-normal text-secondary">({currentStep.targetHz.toFixed(3)} Hz)</span>
           </h2>
         </div>
 
         <div className="tuner-buttons">
           <button 
             id="tuner-start-btn" 
-            className="btn-primary" 
+            className={`btn-primary px-3 text-sm ${audioActive ? 'btn-danger' : ''}`}
             onClick={audioActive ? stopAudio : startAudio}
-            style={{
-              background: audioActive ? 'rgba(239, 68, 68, 0.15)' : undefined,
-              borderColor: audioActive ? 'rgba(239, 68, 68, 0.3)' : undefined,
-              color: audioActive ? '#fca5a5' : undefined,
-              fontSize: '14px',
-              padding: '10px 14px'
-            }}
           >
             {audioActive ? '⏹️ Stop Audio' : '🎙️ Start Tuner Input'}
           </button>
           
           <button
             id="tuner-preview-btn"
-            className="btn-secondary"
+            className={`btn-secondary px-3 text-sm ${monitorActive && audioActive ? 'btn-active-accent' : ''}`}
             onClick={() => setMonitorActive(!monitorActive)}
             disabled={!audioActive}
-            style={{
-              borderColor: monitorActive && audioActive ? 'var(--accent-primary)' : 'rgba(255, 255, 255, 0.1)',
-              color: !audioActive ? 'var(--text-muted)' : (monitorActive ? '#fff' : 'var(--text-secondary)'),
-              background: monitorActive && audioActive ? 'rgba(139, 92, 246, 0.15)' : 'rgba(255, 255, 255, 0.06)',
-              boxShadow: monitorActive && audioActive ? '0 0 10px rgba(139, 92, 246, 0.2)' : 'none',
-              fontSize: '14px',
-              padding: '10px 14px',
-              opacity: !audioActive ? 0.5 : 1,
-              cursor: !audioActive ? 'not-allowed' : 'pointer'
-            }}
           >
             {monitorActive && audioActive ? '🔊 Preview ON' : '🔈 Preview OFF'}
           </button>
@@ -109,13 +92,7 @@ export const LiveTuner: React.FC = () => {
       </div>
 
       {/* Main Large Pitch Deviation Display Card */}
-      <div id="pitch-reading-card" className={`panel-glass ${tunerThemeClass}`} style={{
-        background: 'rgba(5, 7, 14, 0.5)',
-        padding: '30px 20px',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
+      <div id="pitch-reading-card" className={`recessed-screen ${tunerThemeClass} p-8 text-center relative overflow-hidden`}>
         
         {/* Real-time Stability Progress Bar Overlay */}
         {audioActive && isWithinTolerance && autoAdvanceSecs > 0 && (
@@ -131,18 +108,18 @@ export const LiveTuner: React.FC = () => {
           }} />
         )}
 
-        <div style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 500, letterSpacing: '0.05em', marginBottom: '8px' }}>
-          Detected Fundamental Frequency (<span style={{ textTransform: 'none' }}>f<sub>0</sub></span>)
+        <div className="text-[11px] text-secondary uppercase font-medium tracking-wider mb-2">
+          Detected Fundamental Frequency (<span>f<sub>0</sub></span>)
         </div>
 
         {/* Massive Digit reading */}
         <div className="font-mono-data tuner-digits" style={{
           fontWeight: 700,
-          color: isWithinTolerance ? 'var(--color-success)' : hasDetectedPitch ? 'var(--color-warning)' : 'var(--text-muted)',
+          color: isWithinTolerance ? 'var(--color-success)' : hasDetectedPitch ? 'var(--color-danger)' : 'var(--text-muted)',
           textShadow: isWithinTolerance 
             ? '0 0 30px rgba(16, 185, 129, 0.2)' 
             : hasDetectedPitch 
-              ? '0 0 30px rgba(245, 158, 11, 0.15)' 
+              ? '0 0 30px var(--color-danger-bg)' 
               : 'none',
           lineHeight: '1.1',
           marginBottom: '10px'
@@ -151,24 +128,12 @@ export const LiveTuner: React.FC = () => {
         </div>
 
         {/* Guitar-style Tuner Bar */}
-        <div style={{
-          marginTop: '24px',
-          marginBottom: '24px',
-          padding: '0 12px',
-          position: 'relative'
-        }}>
+        <div className="mt-6 mb-6 px-3 relative">
           {/* Cents Scale Markers */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            fontSize: '10px',
-            color: 'var(--text-muted)',
-            fontFamily: 'var(--font-mono)',
-            marginBottom: '6px'
-          }}>
+          <div className="flex justify-between text-[10px] text-muted font-mono mb-2">
             <span>-50¢</span>
             <span>-25¢</span>
-            <span style={{ color: isWithinTolerance ? 'var(--color-success)' : 'var(--text-secondary)', fontWeight: 600 }}>0¢</span>
+            <span className={`font-semibold ${isWithinTolerance ? 'text-success' : 'text-secondary'}`}>0¢</span>
             <span>+25¢</span>
             <span>+50¢</span>
           </div>
@@ -176,11 +141,11 @@ export const LiveTuner: React.FC = () => {
           {/* Bar Track */}
           <div style={{
             height: '10px',
-            background: 'rgba(255, 255, 255, 0.04)',
+            background: 'var(--tuner-track-bg)',
             borderRadius: '5px',
             position: 'relative',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.5)',
+            border: '1px solid var(--tuner-track-border)',
+            boxShadow: 'inset 0 1px 3px var(--tuner-track-shadow)',
           }}>
             {/* Center target tolerance zone indicator */}
             <div style={{
@@ -188,9 +153,9 @@ export const LiveTuner: React.FC = () => {
               left: `${50 - (toleranceCents / 100) * 100}%`,
               width: `${(toleranceCents / 50) * 100}%`,
               height: '100%',
-              background: isWithinTolerance ? 'rgba(16, 185, 129, 0.12)' : 'rgba(255, 255, 255, 0.01)',
-              borderLeft: isWithinTolerance ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(255, 255, 255, 0.05)',
-              borderRight: isWithinTolerance ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(255, 255, 255, 0.05)',
+              background: isWithinTolerance ? 'var(--tuner-zone-active)' : 'var(--tuner-zone-inactive)',
+              borderLeft: isWithinTolerance ? '1px solid var(--tuner-zone-active-border)' : '1px solid var(--tuner-zone-inactive-border)',
+              borderRight: isWithinTolerance ? '1px solid var(--tuner-zone-active-border)' : '1px solid var(--tuner-zone-inactive-border)',
               transition: 'background 0.3s ease, border-color 0.3s ease',
               top: 0
             }} />
@@ -201,7 +166,7 @@ export const LiveTuner: React.FC = () => {
               left: '50%',
               width: '1px',
               height: '16px',
-              background: isWithinTolerance ? 'var(--color-success)' : 'rgba(255, 255, 255, 0.2)',
+              background: isWithinTolerance ? 'var(--color-success)' : 'var(--tuner-center-inactive)',
               top: '-3px',
               zIndex: 1
             }} />
@@ -216,17 +181,13 @@ export const LiveTuner: React.FC = () => {
                 height: '18px',
                 background: isWithinTolerance 
                   ? 'var(--color-success)' 
-                  : tunerData.deltaCents > 0 
-                    ? 'var(--color-warning)' 
-                    : '#f472b6',
+                  : 'var(--color-danger)',
                 borderRadius: '3px',
                 transform: 'translateX(-50%)',
                 top: '-4px',
                 boxShadow: isWithinTolerance 
                   ? '0 0 10px var(--color-success)' 
-                  : tunerData.deltaCents > 0 
-                    ? '0 0 10px var(--color-warning)' 
-                    : '0 0 10px #f472b6',
+                  : '0 0 10px var(--color-danger)',
                 transition: 'left 0.1s linear, background-color 0.2s ease',
                 zIndex: 2,
                 display: 'flex',
@@ -248,30 +209,24 @@ export const LiveTuner: React.FC = () => {
         {/* Details: Delta Hz and Delta Cents */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', marginTop: '16px' }}>
           <div>
-            <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>
+            <div className="text-[10px] text-muted uppercase font-semibold">
               FREQUENCY DEVIATION
             </div>
-            <div className="font-mono-data" style={{
-              fontSize: '18px',
-              fontWeight: 600,
-              marginTop: '4px',
-              color: hasDetectedPitch ? (tunerData.deltaHz >= 0 ? '#67e8f9' : '#f472b6') : 'var(--text-muted)'
+            <div className="font-mono-data text-lg font-semibold mt-1" style={{
+              color: hasDetectedPitch ? (tunerData.deltaHz >= 0 ? 'var(--color-info)' : 'var(--color-danger)') : 'var(--text-muted)'
             }}>
               {deltaHzDisplay}
             </div>
           </div>
           
-          <div style={{ width: '1px', background: 'rgba(255,255,255,0.06)' }} />
+          <div style={{ width: '1px', background: 'var(--panel-border)' }} />
 
           <div>
-            <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>
+            <div className="text-[10px] text-muted uppercase font-semibold">
               CENTS DEVIATION
             </div>
-            <div className="font-mono-data" style={{
-              fontSize: '18px',
-              fontWeight: 600,
-              marginTop: '4px',
-              color: isWithinTolerance ? 'var(--color-success)' : hasDetectedPitch ? 'var(--color-warning)' : 'var(--text-muted)'
+            <div className="font-mono-data text-lg font-semibold mt-1" style={{
+              color: isWithinTolerance ? 'var(--color-success)' : hasDetectedPitch ? 'var(--color-danger)' : 'var(--text-muted)'
             }}>
               {deltaCentsDisplay}
             </div>
@@ -279,12 +234,7 @@ export const LiveTuner: React.FC = () => {
         </div>
 
         {/* Live Status Message */}
-        <div style={{
-          fontSize: '13px',
-          marginTop: '24px',
-          color: isWithinTolerance ? '#6ee7b7' : hasDetectedPitch ? 'rgba(245, 158, 11, 0.8)' : 'var(--text-muted)',
-          fontWeight: isWithinTolerance || hasDetectedPitch ? 600 : 400
-        }}>
+        <div className={`text-[13px] mt-6 ${isWithinTolerance ? 'text-success font-semibold' : hasDetectedPitch ? 'text-danger font-semibold' : 'text-muted font-normal'}`}>
           {statusMessage}
         </div>
       </div>
@@ -292,35 +242,27 @@ export const LiveTuner: React.FC = () => {
       {/* Settings & Manual Controls Group Wrapper */}
       <div 
         id="tuner-settings-card" 
-        style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: '20px',
-          padding: '12px',
-          margin: '-12px',
-          borderRadius: '12px'
-        }}
+        className="flex flex-col gap-5 p-3 -m-3 rounded-sm"
       >
         {/* Manual Workflow Controls (Prev / Next manual overrides) */}
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <button className="btn-secondary" onClick={goToPrevStep} style={{ flex: 1 }}>
+        <div className="flex gap-4">
+          <button className="btn-secondary flex-1" onClick={goToPrevStep}>
             ⏮️ Previous Step
           </button>
           <button
-            className="btn-primary"
+            className="btn-primary flex-1"
             onClick={() => goToNextStep('manual')}
-            style={{ flex: 1 }}
           >
             Next Step ⏭️
           </button>
         </div>
 
-        <hr style={{ border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', margin: '0' }} />
+        <hr className="border-none border-b border-panel m-0" />
 
         {/* Calibration settings options */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '4px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500, textTransform: 'uppercase' }}>
+            <label className="block text-[11px] text-secondary mb-1 font-medium uppercase">
               Lock Tolerance (Cents)
             </label>
             <select
@@ -336,7 +278,7 @@ export const LiveTuner: React.FC = () => {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500, textTransform: 'uppercase' }}>
+            <label className="block text-[11px] text-secondary mb-1 font-medium uppercase">
               Auto-Advance Lock Hold
             </label>
             <select

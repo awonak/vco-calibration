@@ -22,11 +22,11 @@ function StudioLayout() {
       <HelpTour />
 
       {/* Header */}
-      <header className="panel-glass app-header">
+      <header className="panel app-header">
         <div className="app-title-container">
           <div>
             <h1 className="app-title">Analog VCO Calibration Studio</h1>
-            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px', fontWeight: 500 }}>
+            <p className="text-xs text-secondary font-medium mt-1">
               ANALOG VOLTAGE-CONTROLLED OSCILLATOR CALIBRATOR
             </p>
           </div>
@@ -34,18 +34,8 @@ function StudioLayout() {
 
         <button
           id="help-tour-btn"
-          className="btn-secondary"
+          className="btn-secondary text-xs"
           onClick={() => setActiveTourStep(0)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '8px 16px',
-            fontSize: '12px',
-            fontWeight: 600,
-            borderRadius: '8px',
-            cursor: 'pointer'
-          }}
         >
           ❓ Help Tour
         </button>
@@ -68,35 +58,25 @@ function StudioLayout() {
           <HistoryLog />
 
           {/* Analog Calibration Guidance panel */}
-          <div id="calibration-guide-panel" className="panel-glass" style={{ padding: '20px', fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
+          <div id="calibration-guide-panel" className="panel p-5 text-sm text-secondary">
             <h3
               onClick={() => setGuideCollapsed(!guideCollapsed)}
-              style={{
-                color: 'var(--text-primary)',
-                marginBottom: guideCollapsed ? '0' : '8px',
-                fontSize: '18px',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                cursor: 'pointer',
-                userSelect: 'none'
-              }}
+              className={`text-primary font-semibold text-lg flex items-center justify-between cursor-pointer select-none ${guideCollapsed ? 'mb-0' : 'mb-2'}`}
             >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span className="flex items-center gap-2">
                 Calibration Guide
               </span>
-              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500 }}>
+              <span className="text-xs text-secondary font-medium">
                 {guideCollapsed ? '▼ Show' : '▲ Hide'}
               </span>
             </h3>
 
             {!guideCollapsed && (
               <>
-                <p style={{ marginBottom: '10px' }}>
+                <p className="mb-2">
                   Analog VCOs drift due to temperature changes and component aging. To calibrate:
                 </p>
-                <ol style={{ paddingLeft: '16px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <ol className="flex flex-col gap-1 pl-4">
                   <li>Connect your MIDI interface output to the pitch input of your physical VCO.</li>
                   <li>Feed the VCO audio output back into your computer's audio input.</li>
                   <li>Select the MIDI port above and trigger <strong>Enable MIDI Output</strong>.</li>
@@ -111,11 +91,11 @@ function StudioLayout() {
 
       </main>
 
-      <footer style={{ textAlign: 'center', padding: '24px 0', color: 'var(--text-muted)', fontSize: '11px', borderTop: '1px solid rgba(255, 255, 255, 0.03)', marginTop: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+      <footer className="text-center text-muted text-xs flex flex-col items-center gap-3 mt-auto p-5 border-t border-panel">
         <div>
-          VCO Calibration Studio &copy; {new Date().getFullYear()} &bull; <a href="https://github.com/awonak/vco-calibration" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 500, transition: 'color 0.2s ease' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--accent-primary)'}>GitHub</a>
+          VCO Calibration Studio &copy; {new Date().getFullYear()} &bull; <a href="https://github.com/awonak/vco-calibration" target="_blank" rel="noopener noreferrer" className="text-accent hover-text-primary font-medium">GitHub</a>
         </div>
-        <img src={logo} alt="AWSM Logo" style={{ height: '32px', width: 'auto', opacity: 0.45, filter: 'invert(1)' }} />
+        <img src={logo} alt="AWSM Logo" className="footer-logo" />
       </footer>
 
     </div>

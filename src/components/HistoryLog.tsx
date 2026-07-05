@@ -11,39 +11,22 @@ export const HistoryLog: React.FC = () => {
   });
 
   return (
-    <div id="history-log-panel" className="panel-glass" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div id="history-log-panel" className="panel p-5 flex flex-col gap-4">
+      <div className="flex justify-between items-center">
         <h3
           onClick={() => setIsCollapsed(!isCollapsed)}
-          style={{
-            fontSize: '18px',
-            fontWeight: 600,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flex: 1,
-            userSelect: 'none'
-          }}
+          className="text-lg font-semibold cursor-pointer flex items-center justify-between flex-1 select-none"
         >
           <span>Session History Log {historyLog.length > 0 && `(${historyLog.length})`}</span>
-          <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500, marginRight: historyLog.length > 0 && !isCollapsed ? '16px' : '0px' }}>
+          <span className="text-xs text-secondary font-medium" style={{ marginRight: historyLog.length > 0 && !isCollapsed ? '16px' : '0px' }}>
             {isCollapsed ? '▼ Show' : '▲ Hide'}
           </span>
         </h3>
-        
+
         {historyLog.length > 0 && !isCollapsed && (
           <button
             onClick={clearHistory}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#fca5a5',
-              fontSize: '12px',
-              cursor: 'pointer',
-              fontWeight: 500,
-              textDecoration: 'underline'
-            }}
+            className="btn-tour-skip text-xs font-medium cursor-pointer underline text-danger"
           >
             Clear Log
           </button>
@@ -53,90 +36,56 @@ export const HistoryLog: React.FC = () => {
       {!isCollapsed && (
         <>
           {historyLog.length === 0 ? (
-            <div style={{
-              textAlign: 'center',
-              padding: '24px',
-              color: 'var(--text-muted)',
-              fontSize: '14px',
-              border: '1px dashed rgba(255, 255, 255, 0.05)',
-              borderRadius: '8px'
-            }}>
+            <div className="text-center p-6 text-sm text-muted rounded border border-dashed border-panel">
               No calibration measurements logged yet. Locks steps automatically or click 'Next' to log measurements.
             </div>
           ) : (
-            <div style={{
-              maxHeight: '220px',
-              overflowY: 'auto',
-              borderRadius: '8px',
-              border: '1px solid rgba(255,255,255,0.05)'
-            }}>
-              <table style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                fontSize: '13px',
-                textAlign: 'left'
-              }}>
+            <div className="history-table-container">
+              <table className="history-table">
                 <thead>
-                  <tr style={{
-                    background: 'rgba(15, 23, 42, 0.8)',
-                    color: 'var(--text-secondary)',
-                    borderBottom: '1px solid rgba(255,255,255,0.08)'
-                  }}>
-                    <th style={{ padding: '8px 12px', fontWeight: 500 }}>Note</th>
-                    <th style={{ padding: '8px 12px', fontWeight: 500 }}>Target</th>
-                    <th style={{ padding: '8px 12px', fontWeight: 500 }}>Measured</th>
-                    <th style={{ padding: '8px 12px', fontWeight: 500 }}>Dev (Hz)</th>
-                    <th style={{ padding: '8px 12px', fontWeight: 500 }}>Dev (¢)</th>
-                    <th style={{ padding: '8px 12px', fontWeight: 500, textAlign: 'right' }}>Type</th>
+                  <tr>
+                    <th>Note</th>
+                    <th>Target</th>
+                    <th>Measured</th>
+                    <th>Dev (Hz)</th>
+                    <th>Dev (¢)</th>
+                    <th className="text-right">Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   {historyLog.map((entry) => {
                     const absCents = Math.abs(entry.deltaCents);
                     let centsColor: string;
-                    
+
                     if (absCents <= 2.0) {
-                      centsColor = '#6ee7b7'; // Perfect green
+                      centsColor = 'var(--color-success)'; // Perfect
                     } else if (absCents <= 5.0) {
-                      centsColor = 'var(--color-success)'; // Normal green
+                      centsColor = 'var(--color-success)'; // Normal
                     } else if (absCents <= 12.0) {
-                      centsColor = 'var(--color-warning)'; // Warning amber
+                      centsColor = 'var(--color-warning)'; // Warning
                     } else {
-                      centsColor = '#fca5a5'; // Error red
+                      centsColor = 'var(--color-danger)'; // Error
                     }
 
                     return (
-                      <tr
-                        key={entry.id}
-                        style={{
-                          borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
-                          background: 'rgba(255, 255, 255, 0.01)',
-                          transition: 'background 0.2s ease'
-                        }}
-                      >
-                        <td style={{ padding: '8px 12px', fontWeight: 600 }}>{entry.noteName}</td>
-                        <td className="font-mono-data" style={{ padding: '8px 12px', color: 'var(--text-secondary)' }}>
+                      <tr key={entry.id}>
+                        <td className="font-semibold">{entry.noteName}</td>
+                        <td className="font-mono-data text-secondary">
                           {entry.targetHz.toFixed(2)}
                         </td>
-                        <td className="font-mono-data" style={{ padding: '8px 12px' }}>
+                        <td className="font-mono-data">
                           {entry.measuredHz.toFixed(2)}
                         </td>
                         <td className="font-mono-data" style={{
-                          padding: '8px 12px',
-                          color: entry.deltaHz >= 0 ? '#67e8f9' : '#f472b6' // Cyan for positive, pink for negative
+                          color: entry.deltaHz >= 0 ? 'var(--color-info)' : 'var(--color-danger)'
                         }}>
                           {entry.deltaHz >= 0 ? '+' : ''}{entry.deltaHz.toFixed(2)}
                         </td>
-                        <td className="font-mono-data" style={{ padding: '8px 12px', color: centsColor, fontWeight: 600 }}>
+                        <td className="font-mono-data font-semibold" style={{ color: centsColor }}>
                           {entry.deltaCents >= 0 ? '+' : ''}{entry.deltaCents.toFixed(1)}¢
                         </td>
-                        <td style={{
-                          padding: '8px 12px',
-                          textAlign: 'right',
-                          color: 'var(--text-muted)',
-                          fontSize: '11px'
-                        }}>
-                          {entry.method === 'auto' ? '🤖 auto' : '👤 manual'}
+                        <td className="text-right text-muted text-xs">
+                          {entry.method === 'auto' ? 'auto' : 'manual'}
                         </td>
                       </tr>
                     );

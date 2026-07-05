@@ -10,19 +10,12 @@ export const CalibrationSteps: React.FC = () => {
   };
 
   return (
-    <div id="calibration-steps-timeline" className="panel-glass" style={{ padding: '20px' }}>
-      <h4 style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '0.05em', marginBottom: '20px', textTransform: 'uppercase' }}>
+    <div id="calibration-steps-timeline" className="panel-glass p-5">
+      <h4 className="text-xs text-secondary font-semibold tracking-wider mb-5 uppercase">
         5-Octave Iterative Calibration Loop
       </h4>
 
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        position: 'relative',
-        padding: '0 10px',
-        marginTop: '10px'
-      }}>
+      <div className="calibration-steps-wrapper">
         {/* Progress Background Connecting Line */}
         <div className="step-connecting-line" />
 
@@ -31,37 +24,32 @@ export const CalibrationSteps: React.FC = () => {
           const latestLog = getLatestLogForStep(idx);
           const hasBeenCalibrated = latestLog !== undefined;
           
-          let statusBorderColor = 'rgba(255, 255, 255, 0.08)';
-          let dotBg = '#0c0f1d';
+          let statusBorderColor = 'var(--panel-border)';
+          let dotBg = 'var(--panel-bg)';
           let textColor = 'var(--text-secondary)';
           let centsDisplayColor = 'var(--text-muted)';
+          let stepBoxShadow = 'none';
           
           if (isActive) {
             statusBorderColor = 'var(--accent-primary)';
-            dotBg = 'var(--accent-gradient)';
+            dotBg = 'var(--accent-primary)';
             textColor = '#fff';
+            stepBoxShadow = '0 0 16px var(--accent-glow)';
           } else if (hasBeenCalibrated) {
             const absCents = Math.abs(latestLog.deltaCents);
             const inTolerance = absCents <= 5.0; // Show green if within normal target tolerance
             statusBorderColor = inTolerance ? 'var(--color-success)' : 'var(--color-warning)';
-            dotBg = inTolerance ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)';
+            dotBg = inTolerance ? 'var(--color-success-bg)' : 'var(--color-warning-bg)';
             textColor = 'var(--text-primary)';
             centsDisplayColor = inTolerance ? 'var(--color-success)' : 'var(--color-warning)';
+            stepBoxShadow = `0 0 12px ${inTolerance ? 'var(--color-success-glow)' : 'var(--color-warning-glow)'}`;
           }
 
           return (
             <div
               key={step.noteName}
               onClick={() => setActiveStepIndex(idx)}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                cursor: 'pointer',
-                zIndex: 1,
-                flex: 1,
-                position: 'relative',
-              }}
+              className="flex flex-col items-center cursor-pointer z-10 flex-1 relative"
             >
               {/* Step Circle */}
               <div
@@ -69,11 +57,7 @@ export const CalibrationSteps: React.FC = () => {
                 style={{
                   background: dotBg,
                   border: `2px solid ${statusBorderColor}`,
-                  boxShadow: isActive 
-                    ? '0 0 16px var(--accent-glow)' 
-                    : hasBeenCalibrated 
-                      ? `0 0 12px ${statusBorderColor}44` 
-                      : 'none',
+                  boxShadow: stepBoxShadow,
                   color: textColor,
                   transform: isActive ? 'scale(1.15)' : 'scale(1)'
                 }}
@@ -101,7 +85,7 @@ export const CalibrationSteps: React.FC = () => {
                     {latestLog.deltaCents.toFixed(1)}¢
                   </>
                 ) : (
-                  <span style={{ color: 'rgba(255,255,255,0.15)' }}>--</span>
+                  <span style={{ color: 'var(--text-muted)', opacity: 0.5 }}>--</span>
                 )}
               </div>
             </div>

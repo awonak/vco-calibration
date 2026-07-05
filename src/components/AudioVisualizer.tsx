@@ -28,12 +28,11 @@ export const AudioVisualizer: React.FC = () => {
       const width = canvas.width / window.devicePixelRatio;
       const height = canvas.height / window.devicePixelRatio;
 
-      // Clear with slight alpha to create motion blur trail
-      ctx.fillStyle = '#06080e';
-      ctx.fillRect(0, 0, width, height);
+      // Clear canvas to allow CSS panel background to show through
+      ctx.clearRect(0, 0, width, height);
 
       // Draw horizontal grid lines
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+      ctx.strokeStyle = 'rgba(128, 128, 128, 0.2)';
       ctx.lineWidth = 1;
       
       // Grid lines
@@ -49,17 +48,17 @@ export const AudioVisualizer: React.FC = () => {
         const dataArray = new Uint8Array(bufferLength);
         analyserNode.getByteTimeDomainData(dataArray);
 
-        // Neon Glow style
-        ctx.strokeStyle = 'linear-gradient(90deg, #8b5cf6 0%, #06b6d4 100%)';
+        // Neon Glow style - Test Bench Amber/Orange
+        ctx.strokeStyle = 'linear-gradient(90deg, #f59e0b 0%, #ea580c 100%)';
         ctx.lineWidth = 2.5;
         ctx.shadowBlur = 10;
-        ctx.shadowColor = 'rgba(139, 92, 246, 0.6)';
+        ctx.shadowColor = 'rgba(234, 88, 12, 0.6)';
 
         // Create gradient stroke
         const grad = ctx.createLinearGradient(0, 0, width, 0);
-        grad.addColorStop(0, '#8b5cf6');
-        grad.addColorStop(0.5, '#6366f1');
-        grad.addColorStop(1, '#06b6d4');
+        grad.addColorStop(0, '#fcd34d'); // amber-300
+        grad.addColorStop(0.5, '#f59e0b'); // amber-500
+        grad.addColorStop(1, '#ea580c'); // orange-600
         ctx.strokeStyle = grad;
 
         ctx.beginPath();
@@ -87,14 +86,14 @@ export const AudioVisualizer: React.FC = () => {
         ctx.shadowBlur = 0;
       } else {
         // Draw flat center line when idle
-        ctx.strokeStyle = 'rgba(148, 163, 184, 0.15)';
+        ctx.strokeStyle = 'rgba(128, 128, 128, 0.3)';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(0, height / 2);
         ctx.lineTo(width, height / 2);
         ctx.stroke();
 
-        ctx.fillStyle = 'rgba(148, 163, 184, 0.4)';
+        ctx.fillStyle = 'rgba(128, 128, 128, 0.8)';
         ctx.font = '12px var(--font-sans)';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -115,15 +114,10 @@ export const AudioVisualizer: React.FC = () => {
   }, [audioActive, analyserNode]);
 
   return (
-    <div id="waveform-card" className="panel-glass" style={{ padding: '8px', overflow: 'hidden', height: '140px' }}>
+    <div id="waveform-card" className="panel waveform-container">
       <canvas
         ref={canvasRef}
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'block',
-          borderRadius: '8px',
-        }}
+        className="waveform-canvas"
       />
     </div>
   );

@@ -15,46 +15,33 @@ export const MIDIConfig: React.FC = () => {
   } = useCalibration();
 
   return (
-    <div id="midi-config-panel" className="panel-glass" style={{ padding: '20px' }}>
-      <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <div id="midi-config-panel" className="panel-glass p-5">
+      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
         MIDI Output Interface
       </h3>
 
       {!midiSupported ? (
-        <div style={{
-          background: 'rgba(239, 68, 68, 0.08)',
-          border: '1px solid rgba(239, 68, 68, 0.2)',
-          borderRadius: '8px',
-          padding: '12px 16px',
-          fontSize: '14px',
-          color: '#fca5a5',
-          lineHeight: '1.5'
-        }}>
+        <div className="alert-danger">
           <strong>MIDI Support Blocked or Unavailable:</strong> Make sure your browser supports the Web MIDI API and you have granted MIDI permissions.
         </div>
       ) : !midiInitialized ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+        <div className="flex flex-col gap-4">
+          <div className="text-[13px] text-secondary leading-relaxed">
             To transmit reference notes to your VCO, enable the Web MIDI interface. This will request MIDI device access permissions.
           </div>
           
           <button
             id="midi-init-btn"
-            className="btn-primary"
-            style={{
-              width: '100%',
-              background: 'var(--accent-gradient)',
-              boxShadow: '0 4px 12px var(--accent-glow)'
-            }}
+            className="btn-primary w-full"
             onClick={initializeMidi}
           >
             🔌 Enable MIDI Output
           </button>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="flex flex-col gap-4">
           <div>
-            <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500 }}>
+            <label className="block text-xs text-secondary mb-1.5 font-medium uppercase">
               SELECT HARDWARE PORT
             </label>
             {midiOutputs.length === 0 ? (
@@ -76,14 +63,9 @@ export const MIDIConfig: React.FC = () => {
             )}
           </div>
 
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <div className="flex gap-3 items-center">
             <button
-              className="btn-primary"
-              style={{
-                flex: 1,
-                background: midiActive ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'var(--accent-gradient)',
-                boxShadow: midiActive ? '0 4px 12px rgba(16, 185, 129, 0.3)' : '0 4px 12px var(--accent-glow)'
-              }}
+              className={`btn-primary flex-1 ${midiActive ? 'btn-success-active' : ''}`}
               onClick={() => setMidiActive(!midiActive)}
               disabled={midiOutputs.length === 0}
             >
@@ -101,7 +83,7 @@ export const MIDIConfig: React.FC = () => {
             </button>
           </div>
           
-          <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+          <div className="text-xs text-muted leading-relaxed">
             {midiActive 
               ? 'Transmitting continuous reference pitches relative to the active octave step.' 
               : 'MIDI transmissions disabled. Send note gates automatically during VCO calibration steps.'}
