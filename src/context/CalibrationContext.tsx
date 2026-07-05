@@ -162,6 +162,7 @@ export const CalibrationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     const access = await requestMIDIAccessSafe();
     if (access) {
+      localStorage.setItem('midiPreviouslyEnabled', 'true');
       setMidiSupported(true);
       setMidiInitialized(true);
       midiAccessRef.current = access;
@@ -200,6 +201,13 @@ export const CalibrationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       }
     };
   }, []);
+
+  // Auto-initialize if previously enabled
+  useEffect(() => {
+    if (localStorage.getItem('midiPreviouslyEnabled') === 'true') {
+      initializeMidi();
+    }
+  }, [initializeMidi]);
 
   // Keep track of the active MIDI output object in a Ref
   useEffect(() => {
