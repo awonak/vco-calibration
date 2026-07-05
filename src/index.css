@@ -24,7 +24,7 @@
   --color-warning-border: rgba(255, 191, 0, 0.3);
   --color-warning-glow: rgba(255, 191, 0, 0.2);
 
-  --color-danger: #FF6F00;
+  --color-danger: #EF4444;
   --color-danger-bg: rgba(252, 165, 165, 0.1);
   --color-danger-border: rgba(252, 165, 165, 0.3);
   --color-danger-glow: rgba(252, 165, 165, 0.2);
@@ -495,6 +495,7 @@ body {
   height: 100%;
   display: block;
   border-radius: 4px;
+  background: var(--panel-bg);
 }
 
 /* History Table Styles */
